@@ -3,6 +3,20 @@
         <script src="sjcl.js"></script>
         <script src="slide-crypto.js"></script>
         <script src="builder.js"></script>
+        <script id="bucket" type="x-tmpl-mustache">
+            <div class="bucket">
+                {{content}}
+            </div>
+        </script>
+        <script id="block_item" type="x-tmpl-mustache">
+            <div id="{{int_id}}">
+                {{name}}
+                <a class="remove" name="{{int_id}}">Remove</a>
+            </div>
+        </script>
+        <script id="block_select_item" type="x-tmpl-mustache">
+            <a class="block_item" id="{{int_id}}">{{name}}</a>
+        </script>
     </head>
     <body>
         <div class="block_selector"></div>

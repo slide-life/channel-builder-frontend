@@ -2,6 +2,9 @@
 
 var blocks = [];
 var sec = new Object();
+var bucketTemplate;
+var blockItemTemplate;
+var blockSelectItemTemplate;
 
 function Bucket (data, sec) {
     this.id = data.id;
@@ -42,25 +45,31 @@ Bucket.prototype.html = function (cb) {
             str += a + ":" + this.fields[a];
             str += "<hr>";
         }
-        cb("<div class=\"bucket\">" + str + "</div>");
+        cb(Mustache.render(bucketTemplate, {content: str}));
     });
 };
 
 addOn = function (int_id, name) {
     blocks.push(name);
-    $('.selected_blocks').append("<div name=\"" + int_id + "\">" +
-            name + " <a class=\"remove\" id=\"" + int_id+ "\">Remove</a>" +
-            "</div>");
+    $('.selected_blocks').append(
+        Mustache.render(blockItemTemplate, {name: name, int_id: int_id})
+    );
 };
 
 newMessage = function (evt) {
     var bucket = new Bucket(evt, sec);
-    bucket.html(function (b) { //b is a bucket
+    bucket.html(function (b) { //b is a bucket html entry
         $('.live').append(b);
     });
 };
 
 init = function () {
+    bucketTemplate = $('#bucket').html();
+    blockItemTemplate = $('#block_item').html();
+    blockSelectItemTemplate = $('#block_select_item').html();
+    Mustache.parse(bucketTemplate);
+    Mustache.parse(blockItemTemplate);
+    Mustache.parse(blockSelectItemTemplate);
     $.ajax({
         type: 'GET',
         url: 'http://' + HOST + '/blocks',
@@ -68,8 +77,9 @@ init = function () {
         success: function (data) {
             for (var a = 0; a < data.length; a++) {
                 var el = data[a];
-                $('.block_selector').append("<a class=\"block_item\" id=\"" + a + "\">" +
-                        el.name + "</a>");
+                $('.block_selector').append(
+                    Mustache.render(blockSelectItemTemplate, {name: el.name, int_id: a});
+                );
                 $("#" + el.id).click(function(){
                     addOn(el.id, el.name);
                 });
