@@ -6,7 +6,7 @@ var bucketTemplate;
 var blockItemTemplate;
 var blockSelectItemTemplate;
 
-function Bucket (data, sec) {
+function ReceivedBucket (data, sec) {
     this.id = data.id;
     this.publicKey = data.key;
     this.fields = data.fields;
@@ -16,7 +16,7 @@ function Bucket (data, sec) {
     return this;
 }
 
-Bucket.prototype.decodeF = function (blocks, cb, iter) {
+ReceivedBucket.prototype.decodeF = function (blocks, cb, iter) {
     if (iter < blocks.len - 1) {
         slide.crypto.decryptString(blocks[iter], this.cipherKey, this.privateKey, function(clear, carry) {
             this.fields[blocks[iter]] = clear;
@@ -30,14 +30,14 @@ Bucket.prototype.decodeF = function (blocks, cb, iter) {
     }
 };
 
-Bucket.prototype.decode = function (cb) {
+ReceivedBucket.prototype.decode = function (cb) {
     if (!this.decoded) {
         this.decoded = true;
         this.decodeF(blocks, cb, 0);
     }
 }
 
-Bucket.prototype.html = function (cb) {
+ReceivedBucket.prototype.html = function (cb) {
     this.decode(function(){
         str = "";
         for (var i = 0; i < this.fields.keys.len; i++) {
@@ -57,7 +57,7 @@ addOn = function (int_id, name) {
 };
 
 newMessage = function (evt) {
-    var bucket = new Bucket(evt, sec);
+    var bucket = new ReceivedBucket(evt, sec);
     bucket.html(function (b) { //b is a bucket html entry
         $('.live').append(b);
     });
