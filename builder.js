@@ -78,7 +78,7 @@ init = function () {
             for (var a = 0; a < data.length; a++) {
                 var el = data[a];
                 $('.block_selector').append(
-                    Mustache.render(blockSelectItemTemplate, {name: el.name, int_id: a});
+                    Mustache.render(blockSelectItemTemplate, {name: el.name, description: el.description, int_id: a})
                 );
                 $("#" + el.id).click(function(){
                     addOn(el.id, el.name);
@@ -94,7 +94,7 @@ init = function () {
     });
     $('.submit').click(function(){
         //generate key
-        this.generateKeys = function(384, '', function(keys, carry) {
+        slide.crypto.generateKeys(384, '', function(keys, carry) {
             sec = keys.sec;
             //post
             $.ajax({
