@@ -1,30 +1,25 @@
 <html>
-    <head>
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <script src="bower_components/mustache/mustache.js"></script>
-        <script src="bower_components/slide.js/dist/slide.js"></script>
-        <script src="bower_components/sjcl/sjcl.js"></script>
-        <script src="builder.js"></script>
-        <script id="bucket" type="x-tmpl-mustache">
+<head>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/mustache/mustache.js"></script>
+    <script src="bower_components/slide.js/dist/slide.js"></script>
+    <script src="bower_components/sjcl/sjcl.js"></script>
+    <script src="builder.js"></script>
+    <script id="bucket" type="x-tmpl-mustache">
             <div class="bucket">
                 {{content}}
             </div>
-        </script>
-        <script id="block_item" type="x-tmpl-mustache">
-            <div id="{{int_id}}">
-                {{name}}
-                <a class="remove" name="{{int_id}}">Remove</a>
-            </div>
-        </script>
-        <script id="block_select_item" type="x-tmpl-mustache">
-            <a class="block_item" id="{{int_id}}">{{description}}</a>
-        </script>
-    </head>
-    <body>
-        <div class="block_selector"></div>
-        <div class="selected_blocks"></div>
-        <a class="submit">Create channel</a>
-        <hr>
-        <div class="live"></div>
-    </body>
+            <br>
+    </script>
+    <script id="block_item" type="x-tmpl-mustache">
+        <option value="{{name}}">{{description}}</option>
+    </script>
+</head>
+<body>
+    <select style="width:300px" id="blocks" multiple></select>
+    <br>
+    <a href="#" class="submit">Create channel</a>
+    <hr>
+    <div class="live"></div>
+</body>
 </html>

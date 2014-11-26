@@ -1,10 +1,8 @@
 //little bit messy but will clean up later
 
-var blocks = [];
 var sec = new Object();
 var bucketTemplate;
 var blockItemTemplate;
-var blockSelectItemTemplate;
 
 function ReceivedBucket (data, sec) {
     this.id = data.id;
@@ -35,7 +33,7 @@ ReceivedBucket.prototype.decode = function (cb) {
         this.decoded = true;
         this.decodeF(blocks, cb, 0);
     }
-}
+};
 
 ReceivedBucket.prototype.html = function (cb) {
     this.decode(function(){
@@ -49,13 +47,6 @@ ReceivedBucket.prototype.html = function (cb) {
     });
 };
 
-addOn = function (int_id, name) {
-    blocks.push(name);
-    $('.selected_blocks').append(
-        Mustache.render(blockItemTemplate, {name: name, int_id: int_id})
-    );
-};
-
 newMessage = function (evt) {
     var bucket = new ReceivedBucket(evt, sec);
     bucket.html(function (b) { //b is a bucket html entry
@@ -66,10 +57,8 @@ newMessage = function (evt) {
 init = function () {
     bucketTemplate = $('#bucket').html();
     blockItemTemplate = $('#block_item').html();
-    blockSelectItemTemplate = $('#block_select_item').html();
     Mustache.parse(bucketTemplate);
     Mustache.parse(blockItemTemplate);
-    Mustache.parse(blockSelectItemTemplate);
     $.ajax({
         type: 'GET',
         url: 'http://' + HOST + '/blocks',
@@ -77,22 +66,13 @@ init = function () {
         success: function (data) {
             for (var a = 0; a < data.length; a++) {
                 var el = data[a];
-                $('.block_selector').append(
-                    Mustache.render(blockSelectItemTemplate, {name: el.name, description: el.description, int_id: a})
-                );
-                $("#" + el.id).click(function(){
-                    addOn(el.id, el.name);
-                });
+                $('#blocks').append(
+                    Mustache.render(blockItemTemplate, {name: el.name, description: el.description}));
             }
-            $('.remove').click(function(){
-                var block = this.name;
-                $("#" + block).remove();
-                var index = blocks.indexOf(block);
-                if (index > -1) blocks.splice(index, 1);
-            });
         }
     });
     $('.submit').click(function(){
+        blocks = $('#blocks').val();
         //generate key
         slide.crypto.generateKeys(384, '', function(keys, carry) {
             sec = keys.sec;
@@ -106,8 +86,9 @@ init = function () {
                     blocks: blocks
                 }),
                 success: function (data) {
+                    alert(JSON.stringify(data));
                     //subscribe to ws
-                    var socket = new WebSocket('ws://' + HOST + '/channels/' + data.id + '/listen');
+                    var socket = new WebSocket('ws://' + HOST + '/channels/' + data.__id.$oid + '/listen');
                     socket.onmessage = newMessage;
                 }
             });
