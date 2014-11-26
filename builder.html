@@ -1,9 +1,10 @@
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
         <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="bower_components/mustache/mustache.js"></script>
         <script src="bower_components/slide.js/dist/slide.js"></script>
-        <script src="bower_components/sjcl/sjcl.js"></script>
         <script src="builder.js"></script>
         <script id="bucket" type="x-tmpl-mustache">
             <div class="bucket">
@@ -17,7 +18,7 @@
             </div>
         </script>
         <script id="block_select_item" type="x-tmpl-mustache">
-            <a class="block_item" id="{{int_id}}">{{description}}</a>
+            <button class="block_item btn btn-primary" id="{{int_id}}">{{description}}</button>
         </script>
     </head>
     <body>
