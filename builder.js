@@ -3,9 +3,10 @@
 var sec = new Object();
 var bucketTemplate;
 var blockItemTemplate;
+var blocks;
 
 function ReceivedBucket (data, sec) {
-    this.id = data.id;
+    this.id = data.id; //TODO: map out POST /channels/:id -> ruby -> ws notify -> here, field mapping
     this.publicKey = data.key;
     this.fields = data.fields;
     this.cipherKey = data.cipherkey;
@@ -38,8 +39,7 @@ ReceivedBucket.prototype.decode = function (cb) {
 ReceivedBucket.prototype.html = function (cb) {
     this.decode(function(){
         str = "";
-        for (var i = 0; i < this.fields.keys.len; i++) {
-            var a = this.fields.keys[i];
+        for (var a in this.fields) {
             str += a + ":" + this.fields[a];
             str += "<hr>";
         }
