@@ -17,12 +17,12 @@ function ReceivedBucket (data, sec) {
 
 ReceivedBucket.prototype.decodeF = function (blocks, cb, iter) {
     if (iter < blocks.len - 1) {
-        slide.crypto.decryptString(blocks[iter], this.cipherKey, this.privateKey, function(clear, carry) {
+        Slide.crypto.decryptString(blocks[iter], this.cipherKey, this.privateKey, function(clear, carry) {
             this.fields[blocks[iter]] = clear;
             this.decodeF(blocks, cb, iter + 1);
         }, null);
     } else {
-        slide.crypto.decryptString(blocks[iter], this.cipherKey, this.privateKey, function(clear, carry) {
+        Slide.crypto.decryptString(blocks[iter], this.cipherKey, this.privateKey, function(clear, carry) {
             this.fields[blocks[iter]] = clear;
             cb();
         });
@@ -74,7 +74,7 @@ init = function () {
     $('.submit').click(function(){
         blocks = $('#blocks').val();
         //generate key
-        slide.crypto.generateKeys(384, '', function(keys, carry) {
+        Slide.crypto.generateKeys(384, '', function(keys, carry) {
             sec = keys.sec;
             //post
             $.ajax({
