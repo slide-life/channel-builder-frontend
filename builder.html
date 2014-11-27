@@ -1,6 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css">
     <link rel="stylesheet" type="text/css" href="builder.css">
 
     <script id="bucket" type="x-tmpl-mustache">
@@ -14,27 +15,41 @@
     </script>
 </head>
 <body>
-    <div class="row">
-      <div class="col-sm-4 col-sm-offset-4">
-        <div class="form-builder panel panel-default">
-          <div class="panel-body">
-            <h3>Channel builder</h3>
-            <hr>
-            <h5>Select blocks</h5>
-            <div id="blocks"></div>
-            <div class="text-right">
-                <button class="submit btn btn-success">Create channel</button>
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3 channel-wrapper">
+            <div class="channel-builder panel panel-default">
+              <div class="panel-body">
+                <h3>Channel builder</h3>
+                <hr>
+                <h5>Select blocks</h5>
+                <div id="blocks"></div>
+                <div class="text-right">
+                    <button class="submit btn btn-success">Create channel</button>
+                </div>
+              </div>
             </div>
-            <hr>
-            <h5>Responses</h5>
-            <div class="live"></div>
+            <div class="channel panel panel-default">
+              <div class="panel-body">
+                <h3>Channel</h3>
+                <hr>
+                <h5>QR code</h5>
+                <div id="qr"></div>
+                <hr>
+                <h5>Responses</h5>
+                <div class="channel-switch-wrapper">
+                    <input type="checkbox" name="channel-open" id="channel-switch">
+                </div>
+                <div class="live"></div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
     </div>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
     <script src="bower_components/mustache/mustache.js"></script>
     <script src="bower_components/slide.js/dist/slide.js"></script>
     <script src="bower_components/sjcl/sjcl.js"></script>

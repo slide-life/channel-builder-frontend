@@ -54,6 +54,17 @@ newMessage = function (evt) {
     });
 };
 
+function toggleChannelState (channel, state) {
+    $.ajax({
+        type: 'PUT',
+        url: 'http://' + HOST + '/channels/' + channel,
+        contentType: 'application/json',
+        data: JSON.stringify({
+            open: state
+        })
+    });
+}
+
 init = function () {
     bucketTemplate = $('#bucket').html();
     blockItemTemplate = $('#block-item').html();
@@ -75,7 +86,8 @@ init = function () {
     $('#blocks').on('click', '.block', function () {
         $(this).toggleClass('selected').toggleClass('btn-primary').toggleClass('btn-default');
     });
-    $('.submit').on('click', function(){
+    $('.submit').on('click', function() {
+        $(this).addClass('disabled');
         blocks = $('#blocks .block.selected').map(function () {
             return $(this).attr('data-block');
         }).toArray();
@@ -92,9 +104,15 @@ init = function () {
                     blocks: blocks
                 }),
                 success: function (data) {
-                    alert(JSON.stringify(data));
                     //subscribe to ws
-                    var socket = new WebSocket('ws://' + HOST + '/channels/' + data.__id.$oid + '/listen');
+                    var channel = data.__id.$oid;
+                    $('.channel-builder').hide();
+                    $('.channel').show();
+                    $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
+                        toggleChannelState(channel, state)
+                    });
+                    $('#qr').html('<img src="http://' + HOST + '/channels/' + channel + '/qr">');
+                    var socket = new WebSocket('ws://' + HOST + '/channels/' + channel + '/listen');
                     socket.onmessage = newMessage;
                 }
             });
