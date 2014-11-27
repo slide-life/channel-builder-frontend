@@ -56,7 +56,7 @@ newMessage = function (evt) {
 
 init = function () {
     bucketTemplate = $('#bucket').html();
-    blockItemTemplate = $('#block_item').html();
+    blockItemTemplate = $('#block-item').html();
     Mustache.parse(bucketTemplate);
     Mustache.parse(blockItemTemplate);
     $.ajax({
@@ -67,12 +67,21 @@ init = function () {
             for (var a = 0; a < data.length; a++) {
                 var el = data[a];
                 $('#blocks').append(
-                    Mustache.render(blockItemTemplate, {name: el.name, description: el.description}));
+                    Mustache.render(blockItemTemplate, {name: el.name, description: el.description})
+                );
             }
         }
     });
-    $('.submit').click(function(){
-        blocks = $('#blocks').val();
+    $('#blocks').on('click', '.block', function () {
+        $(this).remove().appendTo('#selected-blocks');
+    });
+    $('#selected-blocks').on('click', '.block', function () {
+        $(this).remove().appendTo('#blocks');
+    });
+    $('.submit').on('click', function(){
+        blocks = $('#selected_blocks button').map(function () {
+            return $(this).attr('data-block');
+        }).toArray();
         //generate key
         Slide.crypto.generateKeys(384, '', function(keys, carry) {
             sec = keys.sec;

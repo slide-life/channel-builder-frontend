@@ -1,27 +1,46 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/mustache/mustache.js"></script>
-    <script src="bower_components/slide.js/dist/slide.js"></script>
-    <script src="bower_components/sjcl/sjcl.js"></script>
-    <script src="builder.js"></script>
+    <link rel="stylesheet" type="text/css" href="builder.css">
+
     <script id="bucket" type="x-tmpl-mustache">
             <div class="bucket">
                 {{content}}
             </div>
             <br>
     </script>
-    <script id="block_item" type="x-tmpl-mustache">
-        <option value="{{name}}">{{description}}</option>
+    <script id="block-item" type="x-tmpl-mustache">
+        <button class="btn btn-primary block" data-block="{{name}}">{{description}}</option>
     </script>
 </head>
 <body>
-    <select style="width:300px" id="blocks" multiple></select>
-    <br>
-    <a href="#" class="submit">Create channel</a>
-    <hr>
-    <div class="live"></div>
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-4">
+        <div class="form-builder panel panel-default">
+          <div class="panel-body">
+            <h3>Channel builder</h3>
+            <hr>
+            <h5>Select blocks</h5>
+            <div id="blocks"></div>
+            <hr>
+            <h5>Selected blocks</h5>
+            <div id="selected-blocks"></div>
+            <div class="text-right">
+                <button class="submit btn btn-success">Create channel</button>
+            </div>
+            <hr>
+            <h5>Responses</h5>
+            <div class="live"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/mustache/mustache.js"></script>
+    <script src="bower_components/slide.js/dist/slide.js"></script>
+    <script src="bower_components/sjcl/sjcl.js"></script>
+    <script src="builder.js"></script>
 </body>
 </html>
