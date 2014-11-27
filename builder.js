@@ -73,13 +73,10 @@ init = function () {
         }
     });
     $('#blocks').on('click', '.block', function () {
-        $(this).remove().appendTo('#selected-blocks');
-    });
-    $('#selected-blocks').on('click', '.block', function () {
-        $(this).remove().appendTo('#blocks');
+        $(this).toggleClass('selected').toggleClass('btn-primary').toggleClass('btn-default');
     });
     $('.submit').on('click', function(){
-        blocks = $('#selected_blocks button').map(function () {
+        blocks = $('#blocks .block.selected').map(function () {
             return $(this).attr('data-block');
         }).toArray();
         //generate key
