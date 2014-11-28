@@ -1,60 +1,30 @@
-//little bit messy but will clean up later
-
 var sec = new Object();
 var bucketTemplate;
 var blockItemTemplate;
-var blocks;
 
-function ReceivedBucket (data, sec) {
-    this.id = data.id; //TODO: map out POST /channels/:id -> ruby -> ws notify -> here, field mapping
-    this.publicKey = data.key;
-    this.fields = data.fields;
-    this.cipherKey = data.cipherkey;
-    this.privateKey = sec;
-    this.decoded = false;
-    return this;
-}
-
-ReceivedBucket.prototype.decodeF = function (blocks, cb, iter) {
-    if (iter < blocks.len - 1) {
-        Slide.crypto.decryptString(blocks[iter], this.cipherKey, this.privateKey, function(clear, carry) {
-            this.fields[blocks[iter]] = clear;
-            this.decodeF(blocks, cb, iter + 1);
-        }, null);
-    } else {
-        Slide.crypto.decryptString(blocks[iter], this.cipherKey, this.privateKey, function(clear, carry) {
-            this.fields[blocks[iter]] = clear;
-            cb();
-        });
-    }
-};
-
-ReceivedBucket.prototype.decode = function (cb) {
-    if (!this.decoded) {
-        this.decoded = true;
-        this.decodeF(blocks, cb, 0);
-    }
-};
-
-ReceivedBucket.prototype.html = function (cb) {
-    this.decode(function(){
-        str = "";
-        for (var a in this.fields) {
-            str += a + ":" + this.fields[a];
-            str += "<hr>";
-        }
-        cb(Mustache.render(bucketTemplate, {content: str}));
-    });
-};
-
-newMessage = function (evt) {
+var newMessage = function (evt) {
     var bucket = new ReceivedBucket(evt, sec);
     bucket.html(function (b) { //b is a bucket html entry
         $('.live').append(b);
     });
 };
 
-init = function () {
+function test(ch) { //TODO
+    var sec = ch.sec;
+    Slide.crypto.encryptData({
+        'card-number': '1234',
+        'card-expiry-date': '1234'
+    }, ch.pub, function(result, carry) {
+        $.ajax({
+            type: 'POST',
+            url: 'http://' + HOST + '/channels/' + ch.id,
+            contentType: 'application/json',
+            data: JSON.stringify(result)
+        });
+    });
+}
+
+var init = function () {
     bucketTemplate = $('#bucket').html();
     blockItemTemplate = $('#block-item').html();
     Mustache.parse(bucketTemplate);
@@ -71,22 +41,26 @@ init = function () {
     });
     $('.submit').on('click', function() {
         $(this).addClass('disabled');
-        blocks = $('#blocks .block.selected').map(function () {
+        var blocks = $('#blocks .block.selected').map(function () {
             return $(this).attr('data-block');
         }).toArray();
-        //generate key
-        Slide.createChannel(blocks, function (channel) {
-            //subscribe to ws
-            $('.channel-builder').hide();
-            $('.channel').show();
-            $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
-                channel.updateState(state, function () {
-                    if (state) {
-                        channel.listen(newMessage);
-                    }
+
+        var channel = new Channel(blocks);
+        channel.open({
+            onCreate: function(channel) {
+                var channel_id = channel.id;
+                $('.channel-builder').hide();
+                $('.channel').show();
+                $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
+                    channel.updateState(state, function () {
+                        if (state) {
+                            channel.listen(newMessage);
+                        }
+                    });
                 });
-            });
-            $('#qr').html('<img src="' + channel.getQRCodeURL() + '">');
+                $('#qr').html('<img src="' + channel.getQRCodeURL() + '">');
+            },
+            listen: newMessage
         });
     });
 };
