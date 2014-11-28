@@ -37,10 +37,6 @@ window.Slide = {
         this.createBucket(fields, cb);
     },
 
-    createChannel: function (blocks, cb) {
-        Channel.create(blocks, cb);
-    },
-
     getBlocks: function (cb) {
         $.ajax({
             type: 'GET',
@@ -48,5 +44,7 @@ window.Slide = {
             contentType: 'application/json',
             success: cb
         });
-    }
+    },
+
+    Channel: Channel
 };

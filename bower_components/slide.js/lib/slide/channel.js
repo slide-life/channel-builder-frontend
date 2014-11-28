@@ -1,41 +1,43 @@
-function Channel (data, sec) {
-    this.id = data.id;
-    this.publicKey = data.key;
-    this.privateKey = sec;
+function Channel(blocks) {
+    this.blocks = blocks;
     return this;
 }
 
-Channel.create = function (blocks, cb) {
+Channel.prototype.open = function (cb) {
+    var self = this;
     Slide.crypto.generateKeys(384, '', function (keys, carry) {
-        sec = keys.sec;
-        //post
+        self.publicKey = keys.pub;
+        self.privateKey = keys.sec;
         $.ajax({
             type: 'POST',
             url: 'http://' + Slide.host + '/channels',
             contentType: 'application/json',
             data: JSON.stringify({
-                key: keys.pub,
-                blocks: blocks
+                key: self.publicKey,
+                blocks: self.blocks
             }),
             success: function (data) {
-                cb(new Channel(data, sec));
+                self.id = data.id;
+                cb.onCreate();
+                self.listen(cb.listen);
             }
         });
-    }, null, 0);
-};
+    }, null, this);
+}
 
 Channel.prototype.getQRCodeURL = function () {
     return 'http://' + Slide.host + '/channels/' + this.id + '/qr';
 }
 
-Channel.prototype.updateState = function (state) {
+Channel.prototype.updateState = function (state, cb) {
     $.ajax({
         type: 'PUT',
         url: 'http://' + Slide.host + '/channels/' + this.id,
         contentType: 'application/json',
         data: JSON.stringify({
             open: state
-        })
+        }),
+        success: cb
     });
 };
 
