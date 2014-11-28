@@ -10,14 +10,14 @@ var newMessage = function (evt) {
 };
 
 function test(ch) { //TODO
-    var sec = ch.sec;
+    var sec = ch.privateKey;
     Slide.crypto.encryptData({
         'card-number': '1234',
         'card-expiry-date': '1234'
-    }, ch.pub, function(result, carry) {
+    }, ch.publicKey, function(result, carry) {
         $.ajax({
             type: 'POST',
-            url: 'http://' + HOST + '/channels/' + ch.id,
+            url: ch.getURL(),
             contentType: 'application/json',
             data: JSON.stringify(result)
         });
