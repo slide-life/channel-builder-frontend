@@ -45,7 +45,7 @@ var init = function () {
             return $(this).attr('data-block');
         }).toArray();
 
-        var channel = new Channel(blocks);
+        var channel = new Slide.Channel(blocks);
         channel.open({
             onCreate: function(channel) {
                 var channel_id = channel.id;
