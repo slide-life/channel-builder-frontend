@@ -1,0 +1,32 @@
+<html>
+<head>
+</head>
+<body>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+    <script src="bower_components/mustache/mustache.js"></script>
+    <script src="bower_components/slide.js/dist/slide.js"></script>
+    <script src="bower_components/sjcl/sjcl.js"></script>
+    <script>
+        $(document).ready(function(){
+            Slide.crypto.generateKeys(384, '', function(keys, carry) {
+                Slide.crypto.encryptData({
+                    'card-number': '1234',
+                    'card-expiry-date': '1234'
+                }, keys.pub, function(result, carry) {
+                    //POST
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://' + HOST + '/channels/54783cd87a65695208070000',
+                        contentType: 'application/json',
+                        data: JSON.stringify(result),
+                        success: function(data) {
+                        }
+                    });
+                }, null);
+            }, null, 0);
+        });
+    </script>
+</body>
+</html>
