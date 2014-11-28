@@ -1,0 +1,21 @@
+{
+  "name": "slide.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/slide-life/slide.js",
+  "authors": [
+    "Jack Dent <jack@jackdent.co.uk>"
+  ],
+  "description": "JavaScript client library",
+  "main": "lib/slide.js",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "sjcl": "git@github.com:slide-life/sjcl.git"
+  }
+}

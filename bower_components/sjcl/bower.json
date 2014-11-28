@@ -1,0 +1,14 @@
+{
+  "name": "sjcl",
+  "version": "0.0.0",
+  "homepage": "https://github.com/slide-life/sjcl",
+  "description": "Custom compiled sjcl",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "sjcl",
+  "homepage": "https://github.com/slide-life/sjcl",
+  "description": "Custom compiled sjcl",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "6f10836d0b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "6f10836d0bf10c3bd7839954caff0b15aa0a92e4"
+  },
+  "_source": "git@github.com:slide-life/sjcl.git",
+  "_target": "*",
+  "_originalSource": "git@github.com:slide-life/sjcl.git"
+}
