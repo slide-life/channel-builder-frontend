@@ -80,10 +80,13 @@ init = function () {
             $('.channel-builder').hide();
             $('.channel').show();
             $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
-                channel.updateState(state);
+                channel.updateState(state, function () {
+                    if (state) {
+                        channel.listen(newMessage);
+                    }
+                });
             });
             $('#qr').html('<img src="' + channel.getQRCodeURL() + '">');
-            channel.listen(newMessage);
         });
     });
 };
