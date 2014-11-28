@@ -47,8 +47,7 @@ var init = function () {
 
         var channel = new Slide.Channel(blocks);
         channel.open({
-            onCreate: function(channel) {
-                var channel_id = channel.id;
+            onCreate: function () {
                 $('.channel-builder').hide();
                 $('.channel').show();
                 $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
