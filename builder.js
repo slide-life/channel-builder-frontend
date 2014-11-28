@@ -105,7 +105,7 @@ init = function () {
                 }),
                 success: function (data) {
                     //subscribe to ws
-                    var channel = data.__id.$oid;
+                    var channel = data.id;
                     $('.channel-builder').hide();
                     $('.channel').show();
                     $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {

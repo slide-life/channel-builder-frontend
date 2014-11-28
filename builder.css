@@ -1,0 +1,19 @@
+.channel-wrapper {
+  margin-top: 80px;
+}
+
+.channel {
+  display: none;
+}
+
+.channel-switch-wrapper {
+  height: 32px
+}
+
+.block {
+  margin: 5px;
+}
+
+#qr {
+  text-align: center;
+}
