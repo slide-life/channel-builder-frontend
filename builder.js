@@ -54,34 +54,17 @@ newMessage = function (evt) {
     });
 };
 
-function toggleChannelState (channel, state) {
-    $.ajax({
-        type: 'PUT',
-        url: 'http://' + HOST + '/channels/' + channel,
-        contentType: 'application/json',
-        data: JSON.stringify({
-            open: state
-        })
-    });
-}
-
 init = function () {
     bucketTemplate = $('#bucket').html();
     blockItemTemplate = $('#block-item').html();
     Mustache.parse(bucketTemplate);
     Mustache.parse(blockItemTemplate);
-    $.ajax({
-        type: 'GET',
-        url: 'http://' + HOST + '/blocks',
-        contentType: 'application/json',
-        success: function (data) {
-            for (var a = 0; a < data.length; a++) {
-                var el = data[a];
-                $('#blocks').append(
-                    Mustache.render(blockItemTemplate, {name: el.name, description: el.description})
-                );
-            }
-        }
+    Slide.getBlocks(function (blocks) {
+        blocks.forEach(function (block) {
+            $('#blocks').append(
+                Mustache.render(blockItemTemplate, { name: block.name, description: block.description })
+            );
+        });
     });
     $('#blocks').on('click', '.block', function () {
         $(this).toggleClass('selected').toggleClass('btn-primary').toggleClass('btn-default');
@@ -92,31 +75,16 @@ init = function () {
             return $(this).attr('data-block');
         }).toArray();
         //generate key
-        Slide.crypto.generateKeys(384, '', function(keys, carry) {
-            sec = keys.sec;
-            //post
-            $.ajax({
-                type: 'POST',
-                url: 'http://' + HOST + '/channels',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    key: keys.pub,
-                    blocks: blocks
-                }),
-                success: function (data) {
-                    //subscribe to ws
-                    var channel = data.id;
-                    $('.channel-builder').hide();
-                    $('.channel').show();
-                    $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
-                        toggleChannelState(channel, state)
-                    });
-                    $('#qr').html('<img src="http://' + HOST + '/channels/' + channel + '/qr">');
-                    var socket = new WebSocket('ws://' + HOST + '/channels/' + channel + '/listen');
-                    socket.onmessage = newMessage;
-                }
+        Slide.createChannel(blocks, function (channel) {
+            //subscribe to ws
+            $('.channel-builder').hide();
+            $('.channel').show();
+            $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
+                channel.updateState(state);
             });
-        }, null, 0);
+            $('#qr').html('<img src="' + channel.getQRCodeURL() + '">');
+            channel.listen(newMessage);
+        });
     });
 };
 
