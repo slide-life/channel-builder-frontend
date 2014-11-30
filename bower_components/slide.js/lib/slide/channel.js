@@ -19,20 +19,30 @@ Channel.prototype.open = function (cb) {
             success: function (data) {
                 self.id = data.id;
                 cb.onCreate();
-                self.listen(cb.listen);
+                self.updateState(true, function () {
+                    self.listen(cb.listen);
+                });
             }
         });
     }, null, this);
 }
 
+Channel.prototype.getWSURL = function() {
+    return 'ws://' + Slide.host + '/channels/' + this.id + '/listen';
+};
+
+Channel.prototype.getURL = function() {
+    return 'http://' + Slide.host + '/channels/' + this.id;
+};
+
 Channel.prototype.getQRCodeURL = function () {
-    return 'http://' + Slide.host + '/channels/' + this.id + '/qr';
-}
+    return this.getURL() + '/qr';
+};
 
 Channel.prototype.updateState = function (state, cb) {
     $.ajax({
         type: 'PUT',
-        url: 'http://' + Slide.host + '/channels/' + this.id,
+        url: this.getURL(),
         contentType: 'application/json',
         data: JSON.stringify({
             open: state
@@ -42,7 +52,7 @@ Channel.prototype.updateState = function (state, cb) {
 };
 
 Channel.prototype.listen = function (cb) {
-    var socket = new WebSocket('ws://' + Slide.host + '/buckets/' + this.id + '/listen');
+    var socket = new WebSocket(this.getWSURL());
     socket.onmessage = function (event) {
         cb(JSON.parse(event.data));
     };

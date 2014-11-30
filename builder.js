@@ -58,6 +58,7 @@ var init = function () {
                     });
                 });
                 $('#qr').html('<img src="' + channel.getQRCodeURL() + '">');
+                test(channel);
             },
             listen: newMessage
         });
