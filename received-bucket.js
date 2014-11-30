@@ -13,6 +13,7 @@ ReceivedBucket.prototype.decode = function (cb) {
     if (!this.decoded) {
         this.decoded = true;
         for (var k in this.fields) {
+            alert(this.privateKey);
             Slide.crypto.decryptString(this.fields[k], this.cipherKey, this.privateKey, (function(clear, carry) {
                 this.clearFields[carry] = clear;
                 this.decrypted++;

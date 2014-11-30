@@ -17,11 +17,11 @@
   "dependencies": {
     "sjcl": "git@github.com:slide-life/sjcl.git"
   },
-  "_release": "ae976f91b9",
+  "_release": "5e0ad386e4",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "ae976f91b9f3cef473f861472743aff5aad28965"
+    "commit": "5e0ad386e41abb7cd9d8ec7be5eab9d4ffbfaadb"
   },
   "_source": "git@github.com:slide-life/slide.js.git",
   "_target": "*",

@@ -1,8 +1,9 @@
 var sec = new Object();
 var bucketTemplate;
 var blockItemTemplate;
+var channel;
 
-var newMessage = function (evt) {
+var newMessage = function (evt, sec) {
     var bucket = new ReceivedBucket(evt, sec);
     bucket.html(function (b) { //b is a bucket html entry
         $('.live').append(b);
@@ -10,7 +11,6 @@ var newMessage = function (evt) {
 };
 
 function test(ch) { //TODO
-    var sec = ch.privateKey;
     Slide.crypto.encryptData({
         'card-number': '1234',
         'card-expiry-date': '1234'
@@ -45,7 +45,7 @@ var init = function () {
             return $(this).attr('data-block');
         }).toArray();
 
-        var channel = new Slide.Channel(blocks);
+        channel = new Slide.Channel(blocks);
         channel.open({
             onCreate: function () {
                 $('.channel-builder').hide();

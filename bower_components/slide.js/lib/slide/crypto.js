@@ -101,10 +101,7 @@ export default function () {
             var enckey = Slide.crypto.symEncrypt(carrier.rand, symkey.key);
             var keyhash = Slide.crypto.hashPublicKey(pk);
             carrier.enckey = { enckey: enckey, keytag: symkey.tag, keyhash: keyhash };
-            var ret = new Object(); //TODO: make this all async
-            ret.key = pk;
-            ret.cipherkey = enckey;
-            ret.fields = new Object();
+            var ret = { key: Slide.crypto.deserializePublicKey(pk), cipherkey: carrier.enckey, fields: new Object() };
             for (var k in carrier.cleartext) {
                 Slide.crypto.symEncryptAsync(carrier.cleartext[k], carrier.rand, function(ciphertext, carrier) {
                     ret.fields[k] = ciphertext;

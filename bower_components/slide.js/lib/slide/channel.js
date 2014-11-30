@@ -53,8 +53,9 @@ Channel.prototype.updateState = function (state, cb) {
 
 Channel.prototype.listen = function (cb) {
     var socket = new WebSocket(this.getWSURL());
+    var self = this;
     socket.onmessage = function (event) {
-        cb(JSON.parse(event.data));
+        cb(JSON.parse(event.data), self.privateKey);
     };
 };
 

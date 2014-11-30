@@ -206,8 +206,9 @@ Channel.prototype.updateState = function (state, cb) {
 
 Channel.prototype.listen = function (cb) {
     var socket = new WebSocket(this.getWSURL());
+    var self = this;
     socket.onmessage = function (event) {
-        cb(JSON.parse(event.data));
+        cb(JSON.parse(event.data), self.privateKey);
     };
 };
 
@@ -317,10 +318,7 @@ exports["default"] = function () {
             var enckey = Slide.crypto.symEncrypt(carrier.rand, symkey.key);
             var keyhash = Slide.crypto.hashPublicKey(pk);
             carrier.enckey = { enckey: enckey, keytag: symkey.tag, keyhash: keyhash };
-            var ret = new Object(); //TODO: make this all async
-            ret.key = pk;
-            ret.cipherkey = enckey;
-            ret.fields = new Object();
+            var ret = { key: Slide.crypto.deserializePublicKey(pk), cipherkey: carrier.enckey, fields: new Object() };
             for (var k in carrier.cleartext) {
                 Slide.crypto.symEncryptAsync(carrier.cleartext[k], carrier.rand, function(ciphertext, carrier) {
                     ret.fields[k] = ciphertext;
