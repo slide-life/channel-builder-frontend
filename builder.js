@@ -46,7 +46,7 @@ var init = function () {
         }).toArray();
 
         channel = new Slide.Channel(blocks);
-        channel.open({
+        channel.create({
             onCreate: function () {
                 $('.channel-builder').hide();
                 $('.channel').show();
