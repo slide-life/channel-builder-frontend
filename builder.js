@@ -1,13 +1,22 @@
 var sec = new Object();
 var bucketTemplate;
 var blockItemTemplate;
+var receivedItemTemplate;
 var channel;
 
 var newMessage = function (evt, sec) {
+    Slide.crypto.decryptData(evt, evt.cipherkey, sec, function(result, carry) {
+        var newStruct = [];
+        for (var k in result.fields) {
+            newStruct.push({ key: k, value: result.fields[k] });
+        }
+        $('.live').append(Mustache.render(receivedItemTemplate, { fields: newStruct }));
+    }, null);
+    /*
     var bucket = new ReceivedBucket(evt, sec);
     bucket.html(function (b) { //b is a bucket html entry
         $('.live').append(b);
-    });
+    });*/
 };
 
 function test(ch) { //TODO
@@ -27,8 +36,10 @@ function test(ch) { //TODO
 var init = function () {
     bucketTemplate = $('#bucket').html();
     blockItemTemplate = $('#block-item').html();
+    receivedItemTemplate = $('#received-item').html();
     Mustache.parse(bucketTemplate);
     Mustache.parse(blockItemTemplate);
+    Mustache.parse(receivedItemTemplate);
     Slide.getBlocks(function (blocks) {
         blocks.forEach(function (block) {
             $('#blocks').append(
@@ -46,7 +57,7 @@ var init = function () {
         }).toArray();
 
         channel = new Slide.Channel(blocks);
-        channel.open({
+        channel.create({
             onCreate: function () {
                 $('.channel-builder').hide();
                 $('.channel').show();

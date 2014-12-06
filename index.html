@@ -13,6 +13,14 @@
     <script id="block-item" type="x-tmpl-mustache">
         <button class="btn btn-default block" data-block="{{name}}">{{description}}</option>
     </script>
+    <script id="received-item" type="x-tmpl-mustache">
+        {{#fields}}
+            {{key}}:{{value}}
+            {{^last}}
+                <br>
+            {{/last}}
+        {{/fields}}
+    </script>
 </head>
 <body>
     <div class="container">
