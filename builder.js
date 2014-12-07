@@ -53,8 +53,17 @@ var init = function () {
     $('.submit').on('click', function() {
         $(this).addClass('disabled');
         var blocks = $('#blocks .block.selected').map(function () {
-            return $(this).attr('data-block');
-        }).toArray();
+            return {
+                block: $(this).attr('data-block'),
+                compound: this.hasAttribute('data-block-compound')
+            };
+        }).toArray().reduce(function (previousValue, currentValue) {
+            if (currentValue.compound) {
+                return previousValue.concat(currentValue.block.split(';'));
+            } else {
+                return previousValue.concat([currentValue.block]);
+            }
+        }, []);
 
         channel = new Slide.Channel(blocks);
         channel.create({

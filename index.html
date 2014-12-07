@@ -31,7 +31,14 @@
                 <h3>Channel builder</h3>
                 <hr>
                 <h5>Select blocks</h5>
-                <div id="blocks"></div>
+                <div id="blocks">
+                    <div id="static-blocks">
+                        <button class="btn btn-default block" data-block="first-name;last-name" data-block-compound>Name</button>
+                        <button class="btn btn-default block" data-block="card-number;card-expiry-date;card-security-number" data-block-compound>Credit/Debit Card</button>
+                        <button class="btn btn-default block" data-block="street-address;city;state;zip-code;country" data-block-compound>Address</button>
+                    </div>
+                    <div id="dynamic-blocks"></div>
+                </div>
                 <div class="text-right">
                     <button class="submit btn btn-success">Create channel</button>
                 </div>
