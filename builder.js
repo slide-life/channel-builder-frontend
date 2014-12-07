@@ -36,7 +36,7 @@ function test(ch) { //TODO
 var init = function () {
     bucketTemplate = $('#bucket').html();
     blockItemTemplate = $('#block-item').html();
-    customBlockItemTemplate = $('#customblock-item').html();
+    customBlockItemTemplate = $('#custom-block-item').html();
     receivedItemTemplate = $('#received-item').html();
     Mustache.parse(bucketTemplate);
     Mustache.parse(blockItemTemplate);
@@ -53,7 +53,10 @@ var init = function () {
     });
     $('#add-custom-block').on('click', function () {
         $('#custom-blocks').append(
-            Mustache.render(customBlockItemTemplate, { type: 'text', description: $('#custom-block-description').val() })
+            Mustache.render(customBlockItemTemplate, {
+                type: $('#custom-block-type').val(),
+                description: $('#custom-block-description').val()
+            })
         );
         $('#custom-block-description').val('');
     });
@@ -86,13 +89,6 @@ var init = function () {
             onCreate: function () {
                 $('.channel-builder').hide();
                 $('.channel').show();
-                $('#channel-switch').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
-                    channel.updateState(state, function () {
-                        if (state) {
-                            channel.listen(newMessage);
-                        }
-                    });
-                });
                 $('#qr').html('<img src="' + channel.getQRCodeURL() + '">');
                 test(channel);
             },
