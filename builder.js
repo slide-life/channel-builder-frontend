@@ -36,13 +36,14 @@ function test(ch) { //TODO
 var init = function () {
     bucketTemplate = $('#bucket').html();
     blockItemTemplate = $('#block-item').html();
+    customBlockItemTemplate = $('#customblock-item').html();
     receivedItemTemplate = $('#received-item').html();
     Mustache.parse(bucketTemplate);
     Mustache.parse(blockItemTemplate);
     Mustache.parse(receivedItemTemplate);
     Slide.getBlocks(function (blocks) {
         blocks.forEach(function (block) {
-            $('#blocks').append(
+            $('#dynamic-blocks').append(
                 Mustache.render(blockItemTemplate, { name: block.name, description: block.description })
             );
         });
@@ -50,16 +51,31 @@ var init = function () {
     $('#blocks').on('click', '.block', function () {
         $(this).toggleClass('selected').toggleClass('btn-primary').toggleClass('btn-default');
     });
+    $('#add-custom-block').on('click', function () {
+        $('#custom-blocks').append(
+            Mustache.render(customBlockItemTemplate, { type: 'text', description: $('#custom-block-description').val() })
+        );
+        $('#custom-block-description').val('');
+    });
     $('.submit').on('click', function() {
         $(this).addClass('disabled');
         var blocks = $('#blocks .block.selected').map(function () {
             return {
                 block: $(this).attr('data-block'),
-                compound: this.hasAttribute('data-block-compound')
+                description: $(this).attr('data-block-description'),
+                type: $(this).attr('data-block-type'),
+                compound: this.hasAttribute('data-block-compound'),
+                custom: this.hasAttribute('data-block-custom')
             };
         }).toArray().reduce(function (previousValue, currentValue) {
             if (currentValue.compound) {
                 return previousValue.concat(currentValue.block.split(';'));
+            } else if (currentValue.custom) {
+                return previousValue.concat({
+                    name: 'custom',
+                    description: currentValue.description,
+                    type: currentValue.type
+                });
             } else {
                 return previousValue.concat([currentValue.block]);
             }

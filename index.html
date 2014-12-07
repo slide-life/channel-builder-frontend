@@ -13,6 +13,9 @@
     <script id="block-item" type="x-tmpl-mustache">
         <button class="btn btn-default block" data-block="{{name}}">{{description}}</option>
     </script>
+    <script id="custom-block-item" type="x-tmpl-mustache">
+        <button class="btn btn-default block" data-block-description="{{description}}" data-block-type="{{type}}" data-block-custom>{{description}}</option>
+    </script>
     <script id="received-item" type="x-tmpl-mustache">
         {{#fields}}
             {{key}}:{{value}}
@@ -38,6 +41,9 @@
                         <button class="btn btn-default block" data-block="street-address;city;state;zip-code;country" data-block-compound>Address</button>
                     </div>
                     <div id="dynamic-blocks"></div>
+                    <div id="custom-blocks">
+                        <input id="custom-block-description"><button class="btn btn-primary" id="add-custom-block">Add custom block</button>
+                    </div>
                 </div>
                 <div class="text-right">
                     <button class="submit btn btn-success">Create channel</button>
