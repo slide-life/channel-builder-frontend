@@ -1,24 +1,3 @@
-var sec = new Object();
-var bucketTemplate;
-var blockItemTemplate;
-var receivedItemTemplate;
-var channel;
-
-var newMessage = function (evt, sec) {
-    Slide.crypto.decryptData(evt, evt.cipherkey, sec, function(result, carry) {
-        var newStruct = [];
-        for (var k in result.fields) {
-            newStruct.push({ key: k, value: result.fields[k] });
-        }
-        $('.live').append(Mustache.render(receivedItemTemplate, { fields: newStruct }));
-    }, null);
-    /*
-    var bucket = new ReceivedBucket(evt, sec);
-    bucket.html(function (b) { //b is a bucket html entry
-        $('.live').append(b);
-    });*/
-};
-
 function test(ch) { //TODO
     Slide.crypto.encryptData({
         'card-number': '1234',
@@ -33,25 +12,53 @@ function test(ch) { //TODO
     });
 }
 
-var init = function () {
-    bucketTemplate = $('#bucket').html();
-    blockItemTemplate = $('#block-item').html();
-    customBlockItemTemplate = $('#custom-block-item').html();
-    receivedItemTemplate = $('#received-item').html();
-    Mustache.parse(bucketTemplate);
-    Mustache.parse(blockItemTemplate);
+(function () {
+    var customBlockItemTemplate = $('#custom-block-item').html();
+    var receivedItemTemplate = $('#received-item').html();
+    var channelsTemplate = $('#channels').html();
+    var channelBuilderTemplate = $('#channel-builder').html();
+    var channelTemplate = $('#channel').html();
+    Mustache.parse(customBlockItemTemplate);
     Mustache.parse(receivedItemTemplate);
-    Slide.getBlocks(function (blocks) {
-        blocks.forEach(function (block) {
-            $('#dynamic-blocks').append(
-                Mustache.render(blockItemTemplate, { name: block.name, description: block.description })
-            );
-        });
+    Mustache.parse(channelsTemplate);
+    Mustache.parse(channelBuilderTemplate);
+    Mustache.parse(channelTemplate);
+
+    var sec = {};
+    this.newMessage = function (evt, sec) {
+        Slide.crypto.decryptData(evt, evt.cipherkey, sec, function(result, carry) {
+            var newStruct = [];
+            for (var k in result.fields) {
+                newStruct.push({ key: k, value: result.fields[k] });
+            }
+            $('.live').append(Mustache.render(receivedItemTemplate, { fields: newStruct }));
+        }, null);
+    };
+
+    this.getChannels = function () {
+        return JSON.parse(window.localStorage['channels']);
+    };
+
+    this.addChannel = function (channel) {
+        var channels = JSON.parse(window.localStorage['channels']) || [];
+        channels.push(channel);
+        window.localStorage['channels'] = JSON.stringify(channels);
+        return channels;
+    };
+
+    $('#page').html(Mustache.render(channelsTemplate, {
+        channels: getChannels()
+    }));
+
+    var blocks;
+    Slide.getBlocks(function (b) {
+        blocks = b;
     });
-    $('#blocks').on('click', '.block', function () {
+
+    $('#page').on('click', '#blocks .block', function () {
         $(this).toggleClass('selected').toggleClass('btn-primary').toggleClass('btn-default');
     });
-    $('#add-custom-block').on('click', function () {
+    $('#page').on('click', '#add-custom-block', function () {
         $('#custom-blocks').append(
             Mustache.render(customBlockItemTemplate, {
                 type: $('#custom-block-type').val(),
@@ -60,7 +67,12 @@ var init = function () {
         );
         $('#custom-block-description').val('');
     });
-    $('.submit').on('click', function() {
+    $('#page').on('click', '#create-new-channel', function () {
+        $('#page').html(Mustache.render(channelBuilderTemplate, {
+            blocks: blocks
+        }));
+    });
+    $('#page').on('click', '#create-channel', function() {
         $(this).addClass('disabled');
         var blocks = $('#blocks .block.selected').map(function () {
             return {
@@ -87,16 +99,17 @@ var init = function () {
         channel = new Slide.Channel(blocks);
         channel.create({
             onCreate: function () {
-                $('.channel-builder').hide();
-                $('.channel').show();
-                $('#qr').html('<img src="' + channel.getQRCodeURL() + '">');
+                addChannel({
+                    id: 'TODO',
+                    name: $('#channel-name').val(),
+                    privateKey: 'TODO'
+                });
+                $('#page').html(Mustache.render(channelTemplate, {
+                    QRCodeURL: channel.getQRCodeURL()
+                }));
                 test(channel);
             },
             listen: newMessage
         });
     });
-};
-
-$(document).ready(function(){
-    init();
-});
+}());
