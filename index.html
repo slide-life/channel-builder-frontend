@@ -3,22 +3,21 @@
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="builder.css">
 
-    <script id="custom-block-item" type="x-tmpl-mustache">
+    <script id="custom-block-item" type="text/x-handlebars-template">
         <button class="btn btn-primary block selected" data-block-description="{{description}}" data-block-type="{{type}}" data-block-custom>{{description}}</option>
     </script>
-    <script id="received-item" type="x-tmpl-mustache">
-        {{#fields}}
-            {{key}}:{{value}}
-            {{^last}}
-                <br>
-            {{/last}}
-        {{/fields}}
+    <script id="response" type="text/x-handlebars-template">
+        <hr>
+        {{#each fields}}
+            {{@key}}: {{this}}
+            <br>
+        {{/each}}
     </script>
-    <script id="channels" type="x-tmpl-mustache">
+    <script id="channels" type="text/x-handlebars-template">
         <h3>Channels</h3>
         <hr>
         <ul class="row list-unstyled">
-          {{#channels}}
+          {{#each channels}}
             <li class="col-sm-4">
               <div class="well channel-item">
                 <h5>{{name}}</h5>
@@ -30,11 +29,11 @@
                 </div>
               </div>
             </li>
-          {{/channels}}
+          {{/each}}
         </ul>
         <button class="btn btn-success" id="create-new-channel">Create new channel</button>
     </script>
-    <script id="channel-builder" type="x-tmpl-mustache">
+    <script id="channel-builder" type="text/x-handlebars-template">
         <h3>Channel builder</h3>
         <hr>
         <div id="blocks">
@@ -55,9 +54,9 @@
             </div>
             <h5>Other blocks</h5>
             <div id="dynamic-blocks">
-                {{#blocks}}
+                {{#each blocks}}
                     <button class="btn btn-default block" data-block="{{name}}">{{description}}</option>
-                {{/blocks}}
+                {{/each}}
             </div>
             <h5>Create custom block</h5>
             <div class="form-horizontal">
@@ -84,7 +83,7 @@
             <button class="btn btn-success" id="create-channel">Create channel</button>
         </div>
     </script>
-    <script id="channel" type="x-tmpl-mustache">
+    <script id="channel" type="text/x-handlebars-template">
         <h3>Channel</h3>
         <hr>
         <h5>QR code</h5>
@@ -93,21 +92,19 @@
         </div>
         <hr>
         <h5>Responses</h5>
-        <div class="live"></div>
+        <div class="channel-live-responses"></div>
     </script>
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-3 panel panel-default" id="page-wrapper">
-                <div id="page" class="panel-body"></div>
-            </div>
+        <div class="panel panel-default" id="page-wrapper">
+            <div id="page" class="panel-body"></div>
         </div>
     </div>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/mustache/mustache.js"></script>
+    <script src="bower_components/handlebars/handlebars.min.js"></script>
     <script src="bower_components/slide.js/dist/slide.js"></script>
     <script src="builder.js"></script>
 </body>

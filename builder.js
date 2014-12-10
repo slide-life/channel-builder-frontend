@@ -13,35 +13,31 @@ function test (channel) { //TODO
 }
 
 (function () {
-  var customBlockItemTemplate = $('#custom-block-item').html();
-  var receivedItemTemplate = $('#received-item').html();
-  var channelsTemplate = $('#channels').html();
-  var channelBuilderTemplate = $('#channel-builder').html();
-  var channelTemplate = $('#channel').html();
-  Mustache.parse(customBlockItemTemplate);
-  Mustache.parse(receivedItemTemplate);
-  Mustache.parse(channelsTemplate);
-  Mustache.parse(channelBuilderTemplate);
-  Mustache.parse(channelTemplate);
+  var customBlockItemTemplate = Handlebars.compile($('#custom-block-item').html());
+  var responseTemplate        = Handlebars.compile($('#response').html());
+  var channelsTemplate        = Handlebars.compile($('#channels').html());
+  var channelBuilderTemplate  = Handlebars.compile($('#channel-builder').html());
+  var channelTemplate         = Handlebars.compile($('#channel').html());
 
-  this.newMessage = function (data) {
-    $('.live').append(Mustache.render(receivedItemTemplate, { fields: data }));
+  this.addResponse = function (response) {
+    $('.channel-live-responses').append(responseTemplate({ fields: response.fields }));
   }
 
   this.showChannels = function () {
-    $('#page').html(Mustache.render(channelsTemplate, {
+    $('#page').html(channelsTemplate({
       channels: getChannels()
     }));
   };
 
   this.showChannel = function (channel) {
-    channel.listen(newMessage);
+    channel.listen(addResponse);
     channel.getResponses(function (responses) {
-      $('#page').html(Mustache.render(channelTemplate, {
-        QRCodeURL: channel.getQRCodeURL(),
-        responses: responses
+      $('#page').html(channelTemplate({
+        QRCodeURL: channel.getQRCodeURL()
       }));
-      test(channel);
+      responses.forEach(function (response) {
+        addResponse(response);
+      });
     });
   };
 
@@ -73,7 +69,7 @@ function test (channel) { //TODO
   this.removeChannel = function (index) {
     var channels = getChannels();
     if (index < 0 || index >= channels.length) {
-      throw 'Cannot delete channel : index out of range';
+      throw 'Cannot delete channel: index out of range';
     } else {
       channels.splice(index, 1);
       setChannels(channels);
@@ -96,7 +92,7 @@ function test (channel) { //TODO
 
   $('#page').on('click', '#add-custom-block', function () {
     $('#custom-blocks').append(
-      Mustache.render(customBlockItemTemplate, {
+      customBlockItemTemplate({
         type: $('#custom-block-type').val(),
         description: $('#custom-block-description').val()
       })
@@ -107,7 +103,7 @@ function test (channel) { //TODO
   var blocks;
   $('#page').on('click', '#create-new-channel', function () {
     var render = function () {
-      $('#page').html(Mustache.render(channelBuilderTemplate, {
+      $('#page').html(channelBuilderTemplate({
         blocks: blocks
       }));
     };

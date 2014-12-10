@@ -14,7 +14,7 @@
   "dependencies": {
     "slide.js": "git@github.com:slide-life/slide.js.git",
     "jquery": "~2.1.1",
-    "mustache": "~0.8.2",
+    "handlebars": "2.0.0",
     "bootstrap": "~3.3.1"
   }
 }
