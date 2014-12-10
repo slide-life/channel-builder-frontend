@@ -42,7 +42,7 @@ function test (channel) { //TODO
   };
 
   this.getChannels = function () {
-    var channels = JSON.parse(window.localStorage['channels']) || [];
+    var channels = JSON.parse(window.localStorage['channels'] || '[]');
     return channels.map(function (channel) {
       return Slide.Channel.fromObject(channel);
     });
