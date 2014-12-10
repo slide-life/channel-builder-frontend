@@ -1,0 +1,27 @@
+{
+  "name": "forge",
+  "version": "0.6.20",
+  "description": "JavaScript implementations of network transports, cryptography, ciphers, PKI, message digests, and various utilities.",
+  "authors": [
+    "Digital Bazaar, Inc."
+  ],
+  "license": "BSD",
+  "main": [
+    "js/forge.js"
+  ],
+  "dependencies": {},
+  "ignore": [
+    "node_modules",
+    "bower_components"
+  ],
+  "homepage": "https://github.com/digitalbazaar/forge",
+  "_release": "0.6.20",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.6.20",
+    "commit": "7a305eec3d5879ce5c06ccc1b2bb10c89c0dadd8"
+  },
+  "_source": "git://github.com/digitalbazaar/forge.git",
+  "_target": "0.6.20",
+  "_originalSource": "forge"
+}
