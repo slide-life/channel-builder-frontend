@@ -19,8 +19,8 @@ function test (channel) { //TODO
   var channelBuilderTemplate  = Handlebars.compile($('#channel-builder').html());
   var channelTemplate         = Handlebars.compile($('#channel').html());
 
-  this.addResponse = function (response) {
-    $('.channel-live-responses').append(responseTemplate({ fields: response.fields }));
+  this.addResponse = function (fields) {
+    $('.channel-live-responses').append(responseTemplate({ fields: fields }));
   }
 
   this.showChannels = function () {
@@ -36,7 +36,7 @@ function test (channel) { //TODO
         QRCodeURL: channel.getQRCodeURL()
       }));
       responses.forEach(function (response) {
-        addResponse(response);
+        addResponse(response.fields);
       });
     });
   };
